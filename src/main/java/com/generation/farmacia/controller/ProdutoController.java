@@ -37,18 +37,6 @@ public class ProdutoController {
 		return ResponseEntity.ok(produtoRepository.findAll());
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Produto> getById(@PathVariable Long id) {
-		return produtoRepository.findById(id)
-				.map(resposta -> ResponseEntity.ok(resposta))
-				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-	}
-
-	@GetMapping("/nome/{nome}")
-	public ResponseEntity<List<Produto>> getByNome(@PathVariable String nome) {
-		return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCase(nome));
-	}
-
 	@PostMapping
 	public ResponseEntity<Produto> post(@Valid @RequestBody Produto produto) {
 		return categoriaRepository.findById(produto.getCategoria().getId())
@@ -72,5 +60,31 @@ public class ProdutoController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}).orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
 	}
+	
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Produto> getById(@PathVariable Long id) {
+		return produtoRepository.findById(id)
+				.map(resposta -> ResponseEntity.ok(resposta))
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
+
+	@GetMapping("/nome/{nome}")
+	public ResponseEntity<List<Produto>> getByNome(@PathVariable String nome) {
+		return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCase(nome));
+	}
+
+	@GetMapping("/nome_fabricante/{nome}/{fabricante}")
+	public ResponseEntity<List<Produto>> getByNomeFabricante(@PathVariable String nome, @PathVariable String fabricante){
+		return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCaseAndFabricanteContainingIgnoreCase(nome, fabricante));
+		
+	}
+	
+	@GetMapping("/nome_ou_fabricante/{nome}/{fabricante}")
+	public ResponseEntity<List<Produto>> getByNomeOuFabricante(@PathVariable String nome, @PathVariable String fabricante){
+		return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCaseOrFabricanteContainingIgnoreCase(nome, fabricante));	
+	}
+	
+	
 
 }
